@@ -2,25 +2,20 @@
 
 import type React from "react";
 import { useState, useRef, useEffect, useCallback } from "react";
+import Image from "next/image";
 import {
   Plus,
   SlidersHorizontal,
   ArrowUp,
   X,
-  FileText,
   ImageIcon,
-  Video,
-  Music,
-  Archive,
   ChevronDown,
   Check,
   Loader2,
   AlertCircle,
   Copy,
-  UploadCloud,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 
 // Replace Math.random with nanoid
@@ -92,18 +87,6 @@ const DEFAULT_MODELS_INTERNAL: ModelOption[] = [
 ];
 
 // File type helpers
-const getFileIcon = (type: string) => {
-  if (type.startsWith("image/"))
-    return <ImageIcon className="h-5 w-5 text-zinc-400" />;
-  if (type.startsWith("video/"))
-    return <Video className="h-5 w-5 text-zinc-400" />;
-  if (type.startsWith("audio/"))
-    return <Music className="h-5 w-5 text-zinc-400" />;
-  if (type.includes("zip") || type.includes("rar") || type.includes("tar"))
-    return <Archive className="h-5 w-5 text-zinc-400" />;
-  return <FileText className="h-5 w-5 text-zinc-400" />;
-};
-
 const formatFileSize = (bytes: number): string => {
   if (bytes === 0) return "0 Bytes";
   const k = 1024;
@@ -242,10 +225,11 @@ const FilePreviewCard: React.FC<{
       <div className="flex items-start gap-3 size-[125px] overflow-hidden">
         {isImage && file.preview ? (
           <div className="relative size-full rounded-md overflow-hidden bg-zinc-600">
-            <img
+            <Image
               src={file.preview || "/placeholder.svg"}
               alt={file.file.name}
               className="w-full h-full object-cover"
+              fill
             />
           </div>
         ) : (
@@ -296,7 +280,7 @@ const PastedContentCard: React.FC<{
   content: PastedContent;
   onRemove: (id: string) => void;
 }> = ({ content, onRemove }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded] = useState(false);
   const previewText = content.content.slice(0, 150);
   const needsTruncation = content.content.length > 150;
 
@@ -425,7 +409,7 @@ const TextualFilePreviewCard: React.FC<{
   file: FileWithPreview;
   onRemove: (id: string) => void;
 }> = ({ file, onRemove }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded] = useState(false);
   const previewText = file.textContent?.slice(0, 150) || "";
   const needsTruncation = (file.textContent?.length || 0) > 150;
   const fileExtension = getFileExtension(file.file.name);
@@ -576,7 +560,7 @@ const ClaudeChatInput: React.FC<ChatInputProps> = ({
           return true;
         })
         .map((file) => ({
-          id: Math.random(),
+          id: Math.random().toString(),
           file,
           preview: file.type.startsWith("image/")
             ? URL.createObjectURL(file)
@@ -686,7 +670,7 @@ const ClaudeChatInput: React.FC<ChatInputProps> = ({
         setMessage(message + textData.slice(0, PASTE_THRESHOLD) + "..."); // Add a portion to textarea
 
         const pastedItem: PastedContent = {
-          id: Math.random(),
+          id: Math.random().toString(),
           content: textData,
           timestamp: new Date(),
           wordCount: textData.split(/\s+/).filter(Boolean).length,
@@ -904,7 +888,7 @@ export const Component = ()=>{
       <div className="w-full max-w-4xl">
         <div className="mb-8 text-center py-16">
           <h1 className="text-3xl font-serif font-light text-[#C2C0B6] mb-2">
-            What's new, Suraj?
+            What&apos;s new, Suraj?
           </h1>
         </div>
         

@@ -28,7 +28,7 @@ export default function HeroSection() {
                         <div className="w-full max-w-4xl">
                             <div className="mb-8 text-center">
                                 <h1 className="text-3xl font-serif font-light text-gray-800 mb-2">
-                                    Comment puis-je vous aider aujourd'hui ?
+                                    Comment puis-je vous aider aujourd&apos;hui ?
                                 </h1>
                             </div>
                             

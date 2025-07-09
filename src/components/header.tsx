@@ -1,7 +1,6 @@
 'use client'
 import Link from 'next/link'
 import { Menu, X } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 import React from 'react'
 import { cn } from '@/lib/utils'
 
@@ -39,10 +38,10 @@ export const HeroHeader = () => {
             <nav
                 data-state={menuState && 'active'}
                 className={cn(
-                    'fixed z-20 w-full transition-all duration-500', 
+                    'fixed z-20 w-full transition-opacity duration-1000 ease-linear', 
                     isScrolled && 'border-b border-black/5',
                     // Ne disparaître que si vraiment en train de zoomer activement
-                    isZooming ? 'opacity-0 pointer-events-none' : 'opacity-100'
+                    isZooming ? 'opacity-0 pointer-events-none' : 'opacity-90'
                 )}
                 style={isScrolled ? { backgroundColor: '#FAF9F5' } : undefined}>
                 <div className="w-full px-6">
