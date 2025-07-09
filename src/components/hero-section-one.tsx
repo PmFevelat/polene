@@ -3,6 +3,7 @@
 import React from 'react'
 import { HeroHeader } from './header'
 import { ClaudeChatInput } from '@/components/ui/claude-style-ai-input'
+import { TypingAnimation } from '@/components/magicui/typing-animation'
 import type { FileWithPreview, PastedContent } from '@/components/ui/claude-style-ai-input'
 
 export default function HeroSection() {
@@ -27,9 +28,16 @@ export default function HeroSection() {
                     <div className="relative h-[85vh] flex items-center justify-center p-4">
                         <div className="w-full max-w-4xl">
                             <div className="mb-8 text-center">
-                                <h1 className="text-3xl font-serif font-light text-gray-800 mb-2">
-                                    Comment puis-je vous aider aujourd&apos;hui ?
-                                </h1>
+                                <TypingAnimation
+                                    as="h1"
+                                    className="text-3xl font-serif font-light text-gray-800 mb-2"
+                                    duration={50}
+                                    delay={500}
+                                    showCursor={true}
+                                    cursorClassName="text-gray-800"
+                                >
+                                    How can I help you today?
+                                </TypingAnimation>
                             </div>
                             
                             <ClaudeChatInput

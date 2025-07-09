@@ -1,23 +1,20 @@
 "use client"
 
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
-import { useContext, useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useContext, useEffect, useRef } from "react";
 import Section2 from "./section2";
 import Section3 from "./section3";
 import { ZoomContext } from "./header";
 
-// Cette nouvelle version divise la progression en trois segments clairs :
-// 0-0.33   : Section2 pleine page, scroll normal
-// 0.33-0.66: phase de zoom progressive Section2 → Section3
-// 0.66-1   : Section3 pleine page, scroll normal
+// Section2 → Zoom progressif → Section3 (fond noir complet, centré)
+// 0-0.5   : Section2 pleine page avec navbar
+// 0.5-0.8 : Zoom de Section2, navbar disparaît
+// 0.8-1   : Section3 visible, SANS navbar, fond noir complet
 
 export default function ZoomTransition() {
   const { setIsZooming } = useContext(ZoomContext);
-  const router = useRouter();
-  const [hasNavigated, setHasNavigated] = useState(false);
 
-  // Container de 300vh pour répartir la progression de scroll
+  // Container pour la progression de scroll
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Suivi du scroll relatif au container
@@ -26,71 +23,73 @@ export default function ZoomTransition() {
     offset: ["start start", "end start"],
   });
 
-  // Progression lissée pour les animations
+  // Progression lissée
   const smoothProgress = useSpring(scrollYProgress, {
     stiffness: 120,
     damping: 30,
   });
 
-  // Zoom entre 0.33 et 0.66
-  const zoomScale = useTransform(smoothProgress, [0.33, 0.66], [1, 2.2]);
+  // Zoom entre 0.5 et 0.8
+  const zoomScale = useTransform(smoothProgress, [0.5, 0.8], [1, 3.5]);
 
-  // Opacités
-  const section2Opacity = useTransform(smoothProgress, [0, 0.33, 0.55], [1, 1, 0]);
-  const section3Opacity = useTransform(smoothProgress, [0.45, 0.66, 1], [0, 1, 1]);
+  // Transitions nettes sans overlap
+  const section2Opacity = useTransform(smoothProgress, [0, 0.5, 0.75], [1, 1, 0]);
+  const section3Opacity = useTransform(smoothProgress, [0.75, 0.8, 1], [0, 1, 1]);
 
-  // Overlay noir actif pendant tout le zoom jusqu’à 0.95
-  const overlayOpacity = useTransform(smoothProgress, [0.3, 0.33, 0.95, 0.98], [0, 1, 1, 0]);
+  // Overlay noir UNIQUEMENT pendant le zoom
+  const overlayOpacity = useTransform(smoothProgress, [0.45, 0.5, 0.8, 0.85], [0, 1, 1, 0]);
 
-  // Contrôle de la navbar : uniquement masquée en plein zoom
+  // Contrôle de la navbar - MASQUÉE dès le début du zoom et pendant section3
   useEffect(() => {
     const unsub = smoothProgress.on("change", (v) => {
-      // Masquer la navbar pendant toute la phase de zoom (jusqu’à presque la fin)
-      setIsZooming(v > 0.28 && v < 0.98);
-
-      // Navigation vers /next quand la progression atteint 0.99 (fin du scroll)
-      if (v >= 0.98 && !hasNavigated) {
-        setHasNavigated(true);
-        router.push("/next");
-      }
+      // Navbar masquée pendant le zoom ET dans section3
+      setIsZooming(v > 0.45);
     });
     return () => unsub();
-  }, [smoothProgress, setIsZooming, hasNavigated, router]);
+  }, [smoothProgress, setIsZooming]);
 
   return (
-    <div ref={containerRef} style={{ height: "300vh", position: "relative" }}>
-      {/* Section2 collée (pinned) */}
-      <motion.div
-        style={{
-          position: "sticky",
-          top: 0,
-          height: "100vh",
-          opacity: section2Opacity,
-        }}
-      >
-        <Section2 />
-      </motion.div>
-
-      {/* Overlay pour la partie zoom */}
-      <motion.div
-        className="fixed inset-0 w-full h-screen pointer-events-none z-50 bg-black"
-        style={{ opacity: overlayOpacity }}
-      >
-        {/* Section2 zoomée */}
+    <div style={{ position: "relative", background: "black" }}>
+      {/* Container de scroll pour Section2 */}
+      <div ref={containerRef} style={{ height: "300vh", position: "relative" }}>
         <motion.div
-          className="absolute inset-0 w-full h-full"
-          style={{ scale: zoomScale, transformOrigin: "center center" }}
+          style={{
+            position: "sticky",
+            top: 0,
+            height: "100vh",
+            opacity: section2Opacity,
+          }}
         >
           <Section2 />
         </motion.div>
 
-        {/* Section3 révélée */}
+        {/* Overlay pour le zoom */}
         <motion.div
-          className="absolute inset-0 w-full h-full"
-          style={{ opacity: section3Opacity }}
+          className="fixed inset-0 w-full h-screen pointer-events-none z-50 bg-black"
+          style={{ opacity: overlayOpacity }}
         >
-          <Section3 />
+          <motion.div
+            className="absolute inset-0 w-full h-full"
+            style={{ scale: zoomScale, transformOrigin: "center center" }}
+          >
+            <Section2 />
+          </motion.div>
         </motion.div>
+      </div>
+
+      {/* Section3 - Affichage final SANS navbar, fond noir complet */}
+      <motion.div
+        style={{ 
+          opacity: section3Opacity,
+          position: "relative",
+          zIndex: 10,
+          background: "black",
+          margin: 0,
+          padding: 0,
+          minHeight: "100vh",
+        }}
+      >
+        <Section3 />
       </motion.div>
     </div>
   );

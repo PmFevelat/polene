@@ -816,9 +816,12 @@ const ClaudeChatInput: React.FC<ChatInputProps> = ({
               className={cn(
                 "h-9 w-9 p-0 flex-shrink-0 rounded-md transition-colors",
                 canSend
-                  ? "bg-orange-500 hover:bg-orange-600 text-white"
-                  : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                  ? "bg-black hover:bg-gray-800 text-white"
+                  : "text-white cursor-not-allowed"
               )}
+              style={{
+                backgroundColor: canSend ? undefined : '#898885'
+              }}
               onClick={handleSend}
               disabled={!canSend}
               title="Send message"

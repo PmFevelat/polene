@@ -5,7 +5,6 @@ import React from 'react'
 import { cn } from '@/lib/utils'
 
 const menuItems = [
-    { name: 'Features', href: '#link' },
     { name: 'Pricing', href: '#link' },
     { name: 'About', href: '#link' },
 ]
@@ -83,9 +82,10 @@ export const HeroHeader = () => {
                                 <Link
                                     href="#"
                                     className={cn(
-                                        "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-colors duration-100 ease-in-out focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-muted shadow-sm hover:bg-accent hover:border-accent h-8 rounded-md px-4 py-2",
+                                        "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-colors duration-100 ease-in-out focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input shadow-sm hover:bg-accent hover:border-accent h-8 rounded-md px-4 py-2",
                                         isScrolled && 'lg:hidden'
-                                    )}>
+                                    )}
+                                    style={{ backgroundColor: '#F8F4ED' }}>
                                     Log in
                                 </Link>
                                 <Link
@@ -125,7 +125,8 @@ export const HeroHeader = () => {
                             <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit">
                                 <Link
                                     href="#"
-                                    className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-colors duration-100 ease-in-out border border-input bg-muted shadow-sm hover:bg-accent hover:border-accent h-8 rounded-md px-4 py-2">
+                                    className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-colors duration-100 ease-in-out border border-input shadow-sm hover:bg-accent hover:border-accent h-8 rounded-md px-4 py-2"
+                                    style={{ backgroundColor: '#F8F4ED' }}>
                                     Log in
                                 </Link>
                                 <Link
