@@ -65,22 +65,36 @@ export default function Grid() {
         calculateScrollHeight()
         window.addEventListener('resize', calculateScrollHeight)
 
+        // Détecter si le Grid est complètement centré (sticky scroll terminé)
+        const isGridFullyCentered = () => {
+            const containerRect = containerEl.getBoundingClientRect()
+            const stickyRect = containerEl.querySelector('.sticky')?.getBoundingClientRect()
+            
+            // Le Grid est centré quand le sticky container est exactement en haut de la viewport
+            return stickyRect && Math.abs(stickyRect.top) < 5 // Tolérance de 5px
+        }
+
         const onWheel = (e: WheelEvent) => {
             const delta = e.deltaY
             const atTop = cardsEl.scrollTop <= 1
             const atBottom = cardsEl.scrollTop + cardsEl.clientHeight >= cardsEl.scrollHeight - 1
 
-            // Si on peut encore scroller dans les cards, on bloque le scroll global
-            // PEU IMPORTE où se trouve le curseur dans la zone Grid
+            // PHASE 1: Attendre que le Grid soit complètement centré
+            if (!isGridFullyCentered()) {
+                // Laisser Lenis gérer le sticky scroll pour centrer le Grid
+                return
+            }
+
+            // PHASE 2: Grid centré, maintenant on peut gérer le scroll interne des cartes
             if ((delta > 0 && !atBottom) || (delta < 0 && !atTop)) {
                 cardsEl.scrollTop += delta
                 e.preventDefault()
                 e.stopPropagation()
             }
-            // Dès qu'on atteint les limites, laisser Lenis reprendre
+            // Dès qu'on atteint les limites des cartes, laisser Lenis reprendre pour aller au composant suivant
         }
 
-        // Attacher l'event listener à TOUTE la zone Grid, pas seulement la colonne de droite
+        // Attacher l'event listener à TOUTE la zone Grid
         gridEl.addEventListener('wheel', onWheel, { passive: false })
         
         return () => {
