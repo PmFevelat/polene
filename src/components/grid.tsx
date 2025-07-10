@@ -104,7 +104,7 @@ export default function Grid() {
     }, [])
 
     return (
-        <section className="bg-white">
+        <section style={{ backgroundColor: '#FAF9F5' }}>
             {/* Container avec hauteur calculée dynamiquement */}
             <div ref={containerRef} className="relative">
                 <div className="sticky top-0 h-screen w-full">
