@@ -8,7 +8,7 @@ const gridCards = [
         title: "Introducing Codex",
         category: "Release",
         duration: "12 min read",
-        image: "/image2.png",
+        image: "/image1.png",
         bgColor: "bg-gradient-to-br from-blue-400 to-purple-500"
     },
     {
@@ -16,7 +16,7 @@ const gridCards = [
         title: "OpenAI o3 and o4-mini",
         category: "Release", 
         duration: "11 min read",
-        image: "/geminiai.png",
+        image: "/image2.png",
         bgColor: "bg-gradient-to-br from-yellow-400 to-orange-400"
     },
     {
@@ -24,7 +24,7 @@ const gridCards = [
         title: "Building a custom math tutor powered by ChatGPT",
         category: "ChatGPT",
         duration: "4 min read",
-        image: "/grokai.png",
+        image: "/image3.png",
         bgColor: "bg-gradient-to-br from-green-400 to-blue-400"
     },
     {
@@ -32,8 +32,16 @@ const gridCards = [
         title: "Advanced AI Research",
         category: "Research",
         duration: "8 min read",
-        image: "/Openai.png",
+        image: "/image4.png",
         bgColor: "bg-gradient-to-br from-purple-400 to-pink-400"
+    },
+    {
+        id: 5,
+        title: "Future of AI Technology",
+        category: "Innovation",
+        duration: "6 min read",
+        image: "/image5.png",
+        bgColor: "bg-gradient-to-br from-pink-400 to-red-400"
     }
 ]
 
@@ -150,8 +158,8 @@ export default function Grid() {
                                                 {/* Icon */}
                                                 <div className="absolute top-3 left-3">
                                                     <div className="w-8 h-8 md:w-10 md:h-10 bg-white rounded-lg flex items-center justify-center shadow-sm">
-                                                        <span className={`font-bold text-sm md:text-lg ${idx === 0 ? 'text-blue-600' : idx === 1 ? 'text-orange-600' : idx === 2 ? 'text-green-600' : 'text-purple-600'}`}>
-                                                            {['C', 'O', 'M', 'R'][idx]}
+                                                        <span className={`font-bold text-sm md:text-lg ${idx === 0 ? 'text-blue-600' : idx === 1 ? 'text-orange-600' : idx === 2 ? 'text-green-600' : idx === 3 ? 'text-purple-600' : 'text-red-600'}`}>
+                                                            {['C', 'O', 'M', 'R', 'E'][idx]}
                                                         </span>
                                                     </div>
                                                 </div>
