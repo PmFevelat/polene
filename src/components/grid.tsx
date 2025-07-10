@@ -41,12 +41,14 @@ export default function Grid() {
     const cardsRef = useRef<HTMLDivElement>(null)
     const asideRef = useRef<HTMLElement>(null)
     const containerRef = useRef<HTMLDivElement>(null)
+    const gridRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
         const cardsEl = cardsRef.current
         const asideEl = asideRef.current
         const containerEl = containerRef.current
-        if (!cardsEl || !asideEl || !containerEl) return
+        const gridEl = gridRef.current
+        if (!cardsEl || !asideEl || !containerEl || !gridEl) return
 
         // Calculer la hauteur totale du contenu des cards
         const calculateScrollHeight = () => {
@@ -69,6 +71,7 @@ export default function Grid() {
             const atBottom = cardsEl.scrollTop + cardsEl.clientHeight >= cardsEl.scrollHeight - 1
 
             // Si on peut encore scroller dans les cards, on bloque le scroll global
+            // PEU IMPORTE où se trouve le curseur dans la zone Grid
             if ((delta > 0 && !atBottom) || (delta < 0 && !atTop)) {
                 cardsEl.scrollTop += delta
                 e.preventDefault()
@@ -77,10 +80,11 @@ export default function Grid() {
             // Dès qu'on atteint les limites, laisser Lenis reprendre
         }
 
-        asideEl.addEventListener('wheel', onWheel, { passive: false })
+        // Attacher l'event listener à TOUTE la zone Grid, pas seulement la colonne de droite
+        gridEl.addEventListener('wheel', onWheel, { passive: false })
         
         return () => {
-            asideEl.removeEventListener('wheel', onWheel)
+            gridEl.removeEventListener('wheel', onWheel)
             window.removeEventListener('resize', calculateScrollHeight)
         }
     }, [])
@@ -90,7 +94,7 @@ export default function Grid() {
             {/* Container avec hauteur calculée dynamiquement */}
             <div ref={containerRef} className="relative">
                 <div className="sticky top-0 h-screen w-full">
-                    <div className="w-full px-6 h-full flex items-start justify-center">
+                    <div ref={gridRef} className="w-full px-6 h-full flex items-start justify-center">
                         {/* Grid container */}
                         <div className="w-full grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(280px,27%)] items-start pt-20">
                             {/* Colonne principale */}
