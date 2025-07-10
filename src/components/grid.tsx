@@ -8,40 +8,35 @@ const gridCards = [
         title: "Introducing Codex",
         category: "Release",
         duration: "12 min read",
-        image: "/image1.png",
-        bgColor: "bg-gradient-to-br from-blue-400 to-purple-500"
+        image: "/image1.png"
     },
     {
         id: 2,
         title: "OpenAI o3 and o4-mini",
         category: "Release", 
         duration: "11 min read",
-        image: "/image2.png",
-        bgColor: "bg-gradient-to-br from-yellow-400 to-orange-400"
+        image: "/image2.png"
     },
     {
         id: 3,
         title: "Building a custom math tutor powered by ChatGPT",
         category: "ChatGPT",
         duration: "4 min read",
-        image: "/image3.png",
-        bgColor: "bg-gradient-to-br from-green-400 to-blue-400"
+        image: "/image3.png"
     },
     {
         id: 4,
         title: "Advanced AI Research",
         category: "Research",
         duration: "8 min read",
-        image: "/image4.png",
-        bgColor: "bg-gradient-to-br from-purple-400 to-pink-400"
+        image: "/image4.png"
     },
     {
         id: 5,
         title: "Future of AI Technology",
         category: "Innovation",
         duration: "6 min read",
-        image: "/image5.png",
-        bgColor: "bg-gradient-to-br from-pink-400 to-red-400"
+        image: "/image5.png"
     }
 ]
 
@@ -152,9 +147,15 @@ export default function Grid() {
                                         >
                                             {/* Card image */}
                                             <div
-                                                className={`card-hover relative w-full overflow-hidden rounded-md ${card.bgColor} transition-transform duration-300 group-hover:scale-[1.0125]`}
+                                                className="card-hover relative w-full overflow-hidden rounded-md transition-transform duration-300 group-hover:scale-[1.0125]"
                                                 style={{ aspectRatio: '2 / 1' }}
                                             >
+                                                {/* Image background */}
+                                                <img
+                                                    src={card.image}
+                                                    alt={card.title}
+                                                    className="absolute inset-0 h-full w-full object-cover"
+                                                />
                                                 {/* Icon */}
                                                 <div className="absolute top-3 left-3">
                                                     <div className="w-8 h-8 md:w-10 md:h-10 bg-white rounded-lg flex items-center justify-center shadow-sm">
