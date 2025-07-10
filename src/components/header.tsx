@@ -1,27 +1,24 @@
 'use client'
 import Link from 'next/link'
-import { Menu, X } from 'lucide-react'
+import { Menu, X, ChevronDown } from 'lucide-react'
 import React from 'react'
 import { cn } from '@/lib/utils'
 
 const menuItems = [
     { name: 'Pricing', href: '#link' },
-    { name: 'About', href: '#link' },
 ]
 
-// Contexte global pour l'état du zoom
-export const ZoomContext = React.createContext<{
-    isZooming: boolean
-    setIsZooming: (value: boolean) => void
-}>({
-    isZooming: false,
-    setIsZooming: () => {}
-})
+const companyDropdownItems = [
+    { name: 'Blog', href: '#', soon: true },
+    { name: 'Careers', href: '#', soon: true },
+    { name: 'About', href: '#', soon: true },
+]
 
 export const HeroHeader = () => {
     const [menuState, setMenuState] = React.useState(false)
     const [isScrolled, setIsScrolled] = React.useState(false)
-    const { isZooming } = React.useContext(ZoomContext)
+    const [companyDropdownOpen, setCompanyDropdownOpen] = React.useState(false)
+    const [hoverTimeout, setHoverTimeout] = React.useState<NodeJS.Timeout | null>(null)
 
     React.useEffect(() => {
         const handleScroll = () => {
@@ -32,15 +29,28 @@ export const HeroHeader = () => {
         return () => window.removeEventListener('scroll', handleScroll)
     }, [])
 
+    const handleMouseEnter = () => {
+        if (hoverTimeout) {
+            clearTimeout(hoverTimeout)
+            setHoverTimeout(null)
+        }
+        setCompanyDropdownOpen(true)
+    }
+
+    const handleMouseLeave = () => {
+        const timeout = setTimeout(() => {
+            setCompanyDropdownOpen(false)
+        }, 150) // Délai de 150ms avant fermeture
+        setHoverTimeout(timeout)
+    }
+
     return (
         <header>
             <nav
                 data-state={menuState && 'active'}
                 className={cn(
-                    'fixed z-20 w-full transition-opacity duration-1000 ease-linear', 
-                    isScrolled && 'border-b border-black/5',
-                    // Ne disparaître que si vraiment en train de zoomer activement
-                    isZooming ? 'opacity-0 pointer-events-none' : 'opacity-90'
+                    'fixed z-20 w-full transition-opacity duration-1000 ease-linear opacity-90', 
+                    isScrolled && 'border-b border-black/5'
                 )}
                 style={isScrolled ? { backgroundColor: '#FAF9F5' } : undefined}>
                 <div className="w-full px-6">
@@ -50,7 +60,7 @@ export const HeroHeader = () => {
                             href="/"
                             aria-label="home"
                             className="flex items-center space-x-2">
-                            <span className="text-xl font-semibold text-gray-800">Sobery</span>
+                            <span className="text-xl font-semibold text-gray-800">SOBERY</span>
                         </Link>
 
                         {/* Menu burger pour mobile */}
@@ -75,6 +85,37 @@ export const HeroHeader = () => {
                                         </Link>
                                     </li>
                                 ))}
+                                {/* Company Dropdown */}
+                                <li 
+                                    className="relative company-dropdown"
+                                    onMouseEnter={handleMouseEnter}
+                                    onMouseLeave={handleMouseLeave}
+                                >
+                                    <button
+                                        className="inline-flex items-center justify-center gap-1 whitespace-nowrap text-sm font-medium transition-colors duration-100 ease-in-out hover:text-gray-900 text-gray-700 h-8 rounded-md px-3 py-2">
+                                        <span>Company</span>
+                                        <ChevronDown className={cn("h-4 w-4 transition-transform duration-200", companyDropdownOpen && "rotate-180")} />
+                                    </button>
+                                    
+                                    {/* Dropdown Menu */}
+                                    {companyDropdownOpen && (
+                                        <div className="absolute top-full left-0 w-48 bg-white rounded-lg shadow-lg border border-gray-100 py-2 z-30">
+                                            {companyDropdownItems.map((item, index) => (
+                                                <Link
+                                                    key={index}
+                                                    href={item.href}
+                                                    className="flex items-center justify-between px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                                                    <span>{item.name}</span>
+                                                    {item.soon && (
+                                                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                                                            Soon
+                                                        </span>
+                                                    )}
+                                                </Link>
+                                            ))}
+                                        </div>
+                                    )}
+                                </li>
                             </ul>
                             
                             {/* Boutons Login/Sign Up */}
@@ -120,6 +161,26 @@ export const HeroHeader = () => {
                                             </Link>
                                         </li>
                                     ))}
+                                    {/* Company section pour mobile */}
+                                    <li>
+                                        <span className="text-muted-foreground block mb-2">Company</span>
+                                        <ul className="space-y-2 ml-4">
+                                            {companyDropdownItems.map((item, index) => (
+                                                <li key={index}>
+                                                    <Link
+                                                        href={item.href}
+                                                        className="text-muted-foreground hover:text-accent-foreground flex items-center justify-between duration-150">
+                                                        <span>{item.name}</span>
+                                                        {item.soon && (
+                                                            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                                                                Soon
+                                                            </span>
+                                                        )}
+                                                    </Link>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </li>
                                 </ul>
                             </div>
                             <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit">
