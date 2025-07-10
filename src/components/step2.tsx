@@ -31,9 +31,9 @@ export default function Step2() {
     }, []);
 
     return (
-        <section ref={sectionRef} className="py-8 bg-black text-white">
+        <section ref={sectionRef} className="py-8 bg-white text-black">
             <div className="w-full px-6">
-                <div className="mx-auto grid w-full border border-zinc-700 md:grid-cols-2">
+                <div className="mx-auto grid w-full border border-zinc-300 md:grid-cols-2">
                     <div className="overflow-hidden relative">
                         {isVisible && (
                             <div className="absolute inset-0 flex items-center justify-center z-10">
@@ -106,9 +106,9 @@ export default function Step2() {
                             className="w-full h-auto object-cover"
                         />
                     </div>
-                    <div className="overflow-hidden border-t border-zinc-700 bg-black p-4 sm:p-8 md:border-0 md:border-l flex">
+                    <div className="overflow-hidden border-t border-zinc-300 bg-white p-4 sm:p-8 md:border-0 md:border-l flex">
                         <div className="flex items-center justify-center w-full">
-                            <p className="text-2xl font-semibold text-white text-center">
+                            <p className="text-2xl font-semibold text-black text-center">
                                 Advanced tracking system, Instantly locate all your assets.
                             </p>
                         </div>
