@@ -5,7 +5,7 @@ import React from 'react'
 import { cn } from '@/lib/utils'
 
 const menuItems = [
-    { name: 'Pricing', href: '#link' },
+    { name: 'Pricing', href: '/pricing' },
 ]
 
 const companyDropdownItems = [
@@ -122,28 +122,14 @@ export const HeroHeader = () => {
                             <div className="flex gap-2">
                                 <Link
                                     href="#"
-                                    className={cn(
-                                        "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-colors duration-100 ease-in-out focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input shadow-sm hover:bg-accent hover:border-accent h-8 rounded-md px-4 py-2",
-                                        isScrolled && 'lg:hidden'
-                                    )}
+                                    className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-colors duration-100 ease-in-out focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input shadow-sm hover:bg-accent hover:border-accent h-8 rounded-md px-4 py-2"
                                     style={{ backgroundColor: '#F8F4ED' }}>
                                     Log in
                                 </Link>
                                 <Link
                                     href="#"
-                                    className={cn(
-                                        "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-colors duration-100 ease-in-out focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-8 rounded-md px-4 py-2",
-                                        isScrolled && 'lg:hidden'
-                                    )}>
+                                    className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-colors duration-100 ease-in-out focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-8 rounded-md px-4 py-2">
                                     Sign Up
-                                </Link>
-                                <Link
-                                    href="#"
-                                    className={cn(
-                                        "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-colors duration-100 ease-in-out focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-8 rounded-md px-4 py-2",
-                                        isScrolled ? 'lg:inline-flex' : 'hidden'
-                                    )}>
-                                    Get Started
                                 </Link>
                             </div>
                         </div>

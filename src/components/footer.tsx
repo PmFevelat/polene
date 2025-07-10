@@ -7,14 +7,17 @@ const links = [
             {
                 title: 'About',
                 href: '#',
+                soon: true,
             },
             {
                 title: 'Careers',
                 href: '#',
+                soon: true,
             },
             {
                 title: 'Blog',
                 href: '#',
+                soon: true,
             },
         ],
     },
@@ -23,7 +26,7 @@ const links = [
         items: [
             {
                 title: 'Plans',
-                href: '#',
+                href: '/pricing',
             },
         ],
     },
@@ -52,9 +55,12 @@ export default function FooterSection() {
             <div className="w-full px-6">
                 <div className="grid gap-12 md:grid-cols-6">
                     <div className="md:col-span-2">
-                        <div className="text-black text-xl font-semibold">
+                        <Link 
+                            href="/#hero-section"
+                            className="text-black text-xl font-semibold hover:opacity-80 transition-opacity duration-150 cursor-pointer inline-block"
+                        >
                             POLENE
-                        </div>
+                        </Link>
                     </div>
 
                     <div className="grid grid-cols-3 gap-8 md:col-span-4">
@@ -67,9 +73,14 @@ export default function FooterSection() {
                                     <Link
                                         key={index}
                                         href={item.href}
-                                        className="block duration-150 hover:opacity-80"
+                                        className="flex items-center gap-2 duration-150 hover:opacity-80"
                                         style={{ color: '#374151' }}>
                                         <span>{item.title}</span>
+                                        {'soon' in item && item.soon && (
+                                            <span className="text-xs font-medium text-gray-400">
+                                                Soon
+                                            </span>
+                                        )}
                                     </Link>
                                 ))}
                             </div>

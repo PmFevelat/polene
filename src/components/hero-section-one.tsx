@@ -24,7 +24,7 @@ export default function HeroSection() {
         <>
             <HeroHeader />
             <main className="overflow-hidden">
-                <section style={{ backgroundColor: '#FAF9F5' }}>
+                <section id="hero-section" style={{ backgroundColor: '#FAF9F5' }}>
                     <div className="relative h-[85vh] flex items-center justify-center p-4">
                         <div className="w-full max-w-4xl">
                             <div className="mb-8 text-center">

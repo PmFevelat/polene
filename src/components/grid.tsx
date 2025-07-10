@@ -8,28 +8,32 @@ const gridCards = [
         title: "Introducing Codex",
         category: "Release",
         duration: "12 min read",
-        image: "/image2.png"
+        image: "/image2.png",
+        slug: "introducing-codex"
     },
     {
         id: 2,
         title: "OpenAI o3 and o4-mini",
         category: "Release", 
         duration: "11 min read",
-        image: "/image3.png"
+        image: "/image3.png",
+        slug: "openai-o3-o4-mini"
     },
     {
         id: 3,
         title: "Building a custom math tutor powered by ChatGPT",
         category: "ChatGPT",
         duration: "4 min read",
-        image: "/image4.png"
+        image: "/image4.png",
+        slug: "building-custom-math-tutor"
     },
     {
         id: 4,
         title: "Advanced AI Research",
         category: "Research",
         duration: "8 min read",
-        image: "/image5.png"
+        image: "/image5.png",
+        slug: "advanced-ai-research"
     }
 ]
 
@@ -107,9 +111,13 @@ export default function Grid() {
                         {/* Grid container */}
                         <div className="w-full grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(280px,27%)] items-start pt-20">
                             {/* Colonne principale */}
-                            <div className="flex flex-col">
+                            <a 
+                                href="/blog/letter-sam-jony"
+                                className="flex flex-col group"
+                                aria-label="A letter from Sam & Jony - Company - 3 min read"
+                            >
                                 {/* Image 16:9 */}
-                                <div className="relative w-full aspect-video overflow-hidden rounded-md group">
+                                <div className="relative w-full aspect-video overflow-hidden rounded-md">
                                     <img
                                         src="/image1.png"
                                         alt="A letter from Sam & Jony"
@@ -122,7 +130,7 @@ export default function Grid() {
                                     <span>Company</span>
                                     <span className="text-gray-500">3 min read</span>
                                 </p>
-                            </div>
+                            </a>
 
                             {/* Colonne des cartes scrollables */}
                             <aside ref={asideRef} className="h-full flex flex-col justify-start">
@@ -133,7 +141,7 @@ export default function Grid() {
                                     {gridCards.map((card) => (
                                         <a
                                             key={card.id}
-                                            href="#"
+                                            href={`/blog/${card.slug}`}
                                             aria-label={`${card.title} - ${card.category} - ${card.duration}`}
                                             className="group block w-full flex-shrink-0"
                                         >
