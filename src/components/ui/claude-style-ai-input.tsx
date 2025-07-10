@@ -1,7 +1,6 @@
 "use client";
 
-import type React from "react";
-import { useState, useRef, useEffect, useCallback } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import Image from "next/image";
 import {
   Plus,
@@ -9,14 +8,75 @@ import {
   ArrowUp,
   X,
   ImageIcon,
-  ChevronDown,
-  Check,
   Loader2,
   AlertCircle,
   Copy,
+  Paintbrush,
+  Globe,
+  PencilIcon,
+  Search,
+  Lightbulb,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import * as TooltipPrimitive from "@radix-ui/react-tooltip";
+import * as PopoverPrimitive from "@radix-ui/react-popover";
+
+// Tooltip components
+const TooltipProvider = TooltipPrimitive.Provider;
+const Tooltip = TooltipPrimitive.Root;
+const TooltipTrigger = TooltipPrimitive.Trigger;
+const TooltipContent = React.forwardRef<
+  React.ElementRef<typeof TooltipPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Content> & { showArrow?: boolean }
+>(({ className, sideOffset = 4, showArrow = false, ...props }, ref) => (
+  <TooltipPrimitive.Portal>
+    <TooltipPrimitive.Content
+      ref={ref}
+      sideOffset={sideOffset}
+      className={cn(
+        "relative z-50 max-w-[280px] rounded-md bg-gray-900 text-white px-2 py-1 text-xs animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95",
+        className
+      )}
+      {...props}
+    >
+      {props.children}
+      {showArrow && <TooltipPrimitive.Arrow className="-my-px fill-gray-900" />}
+    </TooltipPrimitive.Content>
+  </TooltipPrimitive.Portal>
+));
+TooltipContent.displayName = TooltipPrimitive.Content.displayName;
+
+// Popover components
+const Popover = PopoverPrimitive.Root;
+const PopoverTrigger = PopoverPrimitive.Trigger;
+const PopoverContent = React.forwardRef<
+  React.ElementRef<typeof PopoverPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Content>
+>(({ className, align = "center", sideOffset = 4, ...props }, ref) => (
+  <PopoverPrimitive.Portal>
+    <PopoverPrimitive.Content
+      ref={ref}
+      align={align}
+      sideOffset={sideOffset}
+      className={cn(
+        "z-50 w-64 rounded-xl bg-white p-2 text-gray-900 shadow-md outline-none animate-in data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0 data-[state=open]:zoom-in-95 data-[state=closed]:zoom-out-95",
+        className
+      )}
+      style={{ border: '1px solid #DDDDDD' }}
+      {...props}
+    />
+  </PopoverPrimitive.Portal>
+));
+PopoverContent.displayName = PopoverPrimitive.Content.displayName;
+
+// Tools list
+const toolsList = [
+  { id: 'createImage', name: 'Create an image', shortName: 'Image', icon: Paintbrush },
+  { id: 'searchWeb', name: 'Search the web', shortName: 'Search', icon: Globe },
+  { id: 'deepResearch', name: 'Run deep research', shortName: 'Deep Search', icon: Search },
+  { id: 'thinkLonger', name: 'Think for longer', shortName: 'Think', icon: Lightbulb },
+];
 
 // Replace Math.random with nanoid
 // import { nanoid } from "nanoid";
@@ -40,12 +100,7 @@ export interface PastedContent {
   wordCount: number;
 }
 
-export interface ModelOption {
-  id: string;
-  name: string;
-  description: string;
-  badge?: string;
-}
+
 
 interface ChatInputProps {
   onSendMessage?: (
@@ -58,33 +113,15 @@ interface ChatInputProps {
   maxFiles?: number;
   maxFileSize?: number; // in bytes
   acceptedFileTypes?: string[];
-  models?: ModelOption[];
-  defaultModel?: string;
-  onModelChange?: (modelId: string) => void;
+  hideAttachButton?: boolean;
+  hideToolsButton?: boolean;
+  hideTooltips?: boolean;
 }
 
 // Constants
 const MAX_FILES = 10;
 const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
 const PASTE_THRESHOLD = 200; // characters threshold for showing as pasted content
-const DEFAULT_MODELS_INTERNAL: ModelOption[] = [
-  {
-    id: "claude-sonnet-4",
-    name: "Claude Sonnet 4",
-    description: "Balanced model",
-    badge: "Latest",
-  },
-  {
-    id: "claude-opus-3.5",
-    name: "Claude Opus 3.5",
-    description: "Highest intelligence",
-  },
-  {
-    id: "claude-haiku-3",
-    name: "Claude Haiku 3",
-    description: "Fastest responses",
-  },
-];
 
 // File type helpers
 const formatFileSize = (bytes: number): string => {
@@ -322,87 +359,7 @@ const PastedContentCard: React.FC<{
 };
 
 // Model Selector Component
-const ModelSelectorDropdown: React.FC<{
-  models: ModelOption[];
-  selectedModel: string;
-  onModelChange: (modelId: string) => void;
-}> = ({ models, selectedModel, onModelChange }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const selectedModelData =
-    models.find((m) => m.id === selectedModel) || models[0];
-  const dropdownRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  return (
-    <div className="relative" ref={dropdownRef}>
-      <Button
-        variant="ghost"
-        size="sm"
-        className="h-9 px-2.5 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100"
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        <span className="truncate max-w-[150px] sm:max-w-[200px]">
-          {selectedModelData.name}
-        </span>
-        <ChevronDown
-          className={cn(
-            "ml-1 h-4 w-4 transition-transform",
-            isOpen && "rotate-180"
-          )}
-        />
-      </Button>
-
-      {isOpen && (
-        <div className="absolute bottom-full right-0 mb-2 w-72 bg-white rounded-lg shadow-xl z-20 p-2" style={{ border: '1px solid #DDDDDD' }}>
-          {models.map((model) => (
-            <button
-              key={model.id}
-              className={cn(
-                "w-full text-left p-2.5 rounded-md hover:bg-gray-100 transition-colors flex items-center justify-between",
-                model.id === selectedModel && "bg-gray-100"
-              )}
-              onClick={() => {
-                onModelChange(model.id);
-                setIsOpen(false);
-              }}
-            >
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="font-medium text-gray-800">
-                    {model.name}
-                  </span>
-                  {model.badge && (
-                    <span className="px-1.5 py-0.5 text-xs bg-blue-100 text-blue-700 rounded">
-                      {model.badge}
-                    </span>
-                  )}
-                </div>
-                <p className="text-xs text-gray-600 mt-0.5">
-                  {model.description}
-                </p>
-              </div>
-              {model.id === selectedModel && (
-                <Check className="h-4 w-4 text-blue-600 flex-shrink-0" />
-              )}
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-};
 
 // Textual File Preview Component
 const TextualFilePreviewCard: React.FC<{
@@ -482,17 +439,16 @@ const ClaudeChatInput: React.FC<ChatInputProps> = ({
   maxFiles = MAX_FILES,
   maxFileSize = MAX_FILE_SIZE,
   acceptedFileTypes,
-  models = DEFAULT_MODELS_INTERNAL,
-  defaultModel,
-  onModelChange,
+  hideAttachButton = false,
+  hideToolsButton = false,
+  hideTooltips = false,
 }) => {
   const [message, setMessage] = useState("");
   const [files, setFiles] = useState<FileWithPreview[]>([]);
   const [pastedContent, setPastedContent] = useState<PastedContent[]>([]);
   const [isDragging, setIsDragging] = useState(false);
-  const [selectedModel, setSelectedModel] = useState(
-    defaultModel || models[0]?.id || ""
-  );
+  const [selectedTool, setSelectedTool] = useState<string | null>(null);
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -723,14 +679,6 @@ const ClaudeChatInput: React.FC<ChatInputProps> = ({
     if (textareaRef.current) textareaRef.current.style.height = "auto";
   }, [message, files, pastedContent, disabled, onSendMessage]);
 
-  const handleModelChangeInternal = useCallback(
-    (modelId: string) => {
-      setSelectedModel(modelId);
-      onModelChange?.(modelId);
-    },
-    [onModelChange]
-  );
-
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
       if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) {
@@ -778,56 +726,196 @@ const ClaudeChatInput: React.FC<ChatInputProps> = ({
         />
         <div className="flex items-center gap-2 justify-between w-full px-3 pb-1.5">
           <div className="flex items-center gap-2">
-            <Button
-              size="icon"
-              variant="ghost"
-              className="h-9 w-9 p-0 text-gray-600 hover:text-gray-800 hover:bg-gray-100 flex-shrink-0"
-              onClick={() => fileInputRef.current?.click()}
-              disabled={disabled || files.length >= maxFiles}
-              title={
-                files.length >= maxFiles
-                  ? `Max ${maxFiles} files reached`
-                  : "Attach files"
-              }
-            >
-              <Plus className="h-5 w-5" />
-            </Button>
-            <Button
-              size="icon"
-              variant="ghost"
-              className="h-9 w-9 p-0 text-gray-600 hover:text-gray-800 hover:bg-gray-100 flex-shrink-0"
-              disabled={disabled}
-              title="Options (Not implemented)"
-            >
-              <SlidersHorizontal className="h-5 w-5" />
-            </Button>
-          </div>
-          <div className="flex items-center gap-2">
-            {models && models.length > 0 && (
-              <ModelSelectorDropdown
-                models={models}
-                selectedModel={selectedModel}
-                onModelChange={handleModelChangeInternal}
-              />
-            )}
+            {!hideAttachButton && !hideTooltips ? (
+              <TooltipProvider delayDuration={100}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="h-9 w-9 p-0 text-gray-600 hover:text-gray-800 hover:bg-gray-100 flex-shrink-0"
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={disabled || files.length >= maxFiles}
+                    >
+                      <Plus className="h-5 w-5" />
+                      <span className="sr-only">Attach files</span>
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="top" showArrow={true}>
+                    <p>Attach files</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            ) : !hideAttachButton && hideTooltips ? (
+              <div className="h-9 w-9 p-0 text-gray-600 flex-shrink-0 flex items-center justify-center pointer-events-none">
+                <Plus className="h-5 w-5" />
+              </div>
+            ) : !hideAttachButton ? (
+              <Button
+                size="icon"
+                variant="ghost"
+                className="h-9 w-9 p-0 text-gray-600 hover:text-gray-800 hover:bg-gray-100 flex-shrink-0"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={disabled || files.length >= maxFiles}
+              >
+                <Plus className="h-5 w-5" />
+                <span className="sr-only">Attach files</span>
+              </Button>
+            ) : null}
+            
+            {!hideToolsButton && !hideTooltips ? (
+              <TooltipProvider delayDuration={100}>
+                <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <PopoverTrigger asChild>
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="h-9 w-9 p-0 text-gray-600 hover:text-gray-800 hover:bg-gray-100 flex-shrink-0"
+                          disabled={disabled}
+                        >
+                          <SlidersHorizontal className="h-5 w-5" />
+                          <span className="sr-only">Explore tools</span>
+                        </Button>
+                      </PopoverTrigger>
+                    </TooltipTrigger>
+                    <TooltipContent side="top" showArrow={true}>
+                      <p>Explore tools</p>
+                    </TooltipContent>
+                  </Tooltip>
+                  <PopoverContent side="top" align="start">
+                    <div className="flex flex-col gap-1">
+                      {toolsList.map(tool => (
+                        <button
+                          key={tool.id}
+                          onClick={() => {
+                            setSelectedTool(tool.id);
+                            setIsPopoverOpen(false);
+                          }}
+                          className="flex w-full items-center gap-2 rounded-md p-2 text-left text-sm hover:bg-gray-100 transition-colors"
+                        >
+                          <tool.icon className="h-4 w-4" />
+                          <span>{tool.name}</span>
+                          {tool.extra && (
+                            <span className="ml-auto text-xs text-gray-500">{tool.extra}</span>
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  </PopoverContent>
+                </Popover>
+              </TooltipProvider>
+            ) : !hideToolsButton && hideTooltips ? (
+              <div className="h-9 w-9 p-0 text-gray-600 flex-shrink-0 flex items-center justify-center pointer-events-none">
+                <SlidersHorizontal className="h-5 w-5" />
+              </div>
+            ) : !hideToolsButton ? (
+              <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="h-9 w-9 p-0 text-gray-600 hover:text-gray-800 hover:bg-gray-100 flex-shrink-0"
+                    disabled={disabled}
+                  >
+                    <SlidersHorizontal className="h-5 w-5" />
+                    <span className="sr-only">Explore tools</span>
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent side="top" align="start">
+                  <div className="flex flex-col gap-1">
+                    {toolsList.map(tool => (
+                      <button
+                        key={tool.id}
+                        onClick={() => {
+                          setSelectedTool(tool.id);
+                          setIsPopoverOpen(false);
+                        }}
+                        className="flex w-full items-center gap-2 rounded-md p-2 text-left text-sm hover:bg-gray-100 transition-colors"
+                      >
+                        <tool.icon className="h-4 w-4" />
+                        <span>{tool.name}</span>
+                        {tool.extra && (
+                          <span className="ml-auto text-xs text-gray-500">{tool.extra}</span>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </PopoverContent>
+              </Popover>
+            ) : null}
 
-            <Button
-              size="icon"
-              className={cn(
-                "h-9 w-9 p-0 flex-shrink-0 rounded-md transition-colors",
-                canSend
-                  ? "bg-black hover:bg-gray-800 text-white"
-                  : "text-white cursor-not-allowed"
-              )}
-              style={{
-                backgroundColor: canSend ? undefined : '#898885'
-              }}
-              onClick={handleSend}
-              disabled={!canSend}
-              title="Send message"
-            >
-              <ArrowUp className="h-5 w-5" />
-            </Button>
+            {selectedTool && !hideToolsButton && !hideTooltips && (
+              <>
+                <div className="h-4 w-px bg-gray-300" />
+                <button
+                  onClick={() => setSelectedTool(null)}
+                  className="flex h-8 items-center gap-2 rounded-full px-2 text-sm text-blue-600 hover:bg-gray-100 cursor-pointer transition-colors"
+                >
+                  {(() => {
+                    const activeTool = toolsList.find(t => t.id === selectedTool);
+                    const ActiveToolIcon = activeTool?.icon;
+                    return (
+                      <>
+                        {ActiveToolIcon && <ActiveToolIcon className="h-4 w-4" />}
+                        {activeTool?.shortName}
+                        <X className="h-4 w-4" />
+                      </>
+                    );
+                  })()}
+                </button>
+              </>
+            )}
+          </div>
+          
+          <div className="flex items-center gap-2">
+            {!hideTooltips ? (
+              <TooltipProvider delayDuration={100}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      size="icon"
+                      className={cn(
+                        "h-9 w-9 p-0 flex-shrink-0 rounded-md transition-colors",
+                        canSend
+                          ? "bg-black hover:bg-gray-800 text-white"
+                          : "text-white cursor-not-allowed"
+                      )}
+                      style={{
+                        backgroundColor: canSend ? undefined : '#898885'
+                      }}
+                      onClick={handleSend}
+                      disabled={!canSend}
+                    >
+                      <ArrowUp className="h-5 w-5" />
+                      <span className="sr-only">Send message</span>
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="top" showArrow={true}>
+                    <p>Send</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            ) : (
+              <Button
+                size="icon"
+                className={cn(
+                  "h-9 w-9 p-0 flex-shrink-0 rounded-md transition-colors",
+                  canSend
+                    ? "bg-black hover:bg-gray-800 text-white"
+                    : "text-white cursor-not-allowed"
+                )}
+                style={{
+                  backgroundColor: canSend ? undefined : '#898885'
+                }}
+                onClick={handleSend}
+                disabled={!canSend}
+              >
+                <ArrowUp className="h-5 w-5" />
+                <span className="sr-only">Send message</span>
+              </Button>
+            )}
           </div>
         </div>
         {(files.length > 0 || pastedContent.length > 0) && (

@@ -44,6 +44,7 @@
   --radius-xl: calc(var(--radius) + 4px);
   --animate-marquee: marquee var(--duration) infinite linear;
   --animate-marquee-vertical: marquee-vertical var(--duration) linear infinite;
+  --radius: var(----radius);
   @keyframes marquee {
   from {
     transform: translateX(0);

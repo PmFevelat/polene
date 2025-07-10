@@ -32,11 +32,11 @@ export default function FeaturesSection() {
 const chartConfig = {
     desktop: {
         label: 'Desktop',
-        color: '#3b82f6', // blue-500
+        color: '#3B6C89', // bleu custom
     },
     mobile: {
         label: 'Mobile',
-        color: '#60a5fa', // blue-400
+        color: '#C1A87C', // orange clair
     },
 } satisfies ChartConfig
 

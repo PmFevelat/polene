@@ -60,7 +60,7 @@ export const HeroHeader = () => {
                             href="/"
                             aria-label="home"
                             className="flex items-center space-x-2">
-                            <span className="text-xl font-semibold text-gray-800">SOBERY</span>
+                            <span className="text-xl font-semibold text-gray-800">POLENE</span>
                         </Link>
 
                         {/* Menu burger pour mobile */}
@@ -107,7 +107,7 @@ export const HeroHeader = () => {
                                                     className="flex items-center justify-between px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
                                                     <span>{item.name}</span>
                                                     {item.soon && (
-                                                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                                                        <span className="text-xs font-medium text-gray-400">
                                                             Soon
                                                         </span>
                                                     )}
@@ -172,7 +172,7 @@ export const HeroHeader = () => {
                                                         className="text-muted-foreground hover:text-accent-foreground flex items-center justify-between duration-150">
                                                         <span>{item.name}</span>
                                                         {item.soon && (
-                                                            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                                                            <span className="text-xs font-medium text-gray-400">
                                                                 Soon
                                                             </span>
                                                         )}

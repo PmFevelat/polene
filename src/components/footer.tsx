@@ -53,7 +53,7 @@ export default function FooterSection() {
                 <div className="grid gap-12 md:grid-cols-6">
                     <div className="md:col-span-2">
                         <div className="text-white text-xl font-semibold">
-                            SOBERY
+                            POLENE
                         </div>
                     </div>
 
@@ -78,7 +78,7 @@ export default function FooterSection() {
                 </div>
                 <div className="mt-12 pb-6">
                     <div className="flex justify-end">
-                        <span className="text-sm" style={{ color: '#86827C' }}>© {new Date().getFullYear()} SOBERY</span>
+                        <span className="text-sm" style={{ color: '#86827C' }}>© {new Date().getFullYear()} POLENE</span>
                     </div>
                 </div>
             </div>
