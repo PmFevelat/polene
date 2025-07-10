@@ -16,7 +16,7 @@ export default function FeaturesSection() {
                             </span>
 
                             <p className="my-8 text-2xl font-semibold text-white">
-                                Monitor your application's activity in real-time. <span className="text-zinc-400"> Instantly identify and resolve issues.</span>
+                                Monitor your application&apos;s activity in real-time. <span className="text-zinc-400"> Instantly identify and resolve issues.</span>
                             </p>
                         </div>
                         <div className="w-full">

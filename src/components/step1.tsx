@@ -54,7 +54,7 @@ export default function Step1() {
                                     </span>
                                     <span className="text-zinc-400 text-xs">Sat 22 Feb</span>
                                 </div>
-                                <div className="rounded-lg bg-zinc-800 border border-zinc-700 mt-1.5 w-3/5 p-3 text-xs text-white">Hey, I'm having trouble with my account.</div>
+                                <div className="rounded-lg bg-zinc-800 border border-zinc-700 mt-1.5 w-3/5 p-3 text-xs text-white">Hey, I&apos;m having trouble with my account.</div>
                             </div>
 
                             <div>

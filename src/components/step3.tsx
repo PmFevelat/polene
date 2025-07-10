@@ -30,7 +30,7 @@ export default function Step3() {
         };
     }, []);
 
-    const handleSendMessage = (message: string, files: any[], pastedContent: any[]) => {
+    const handleSendMessage = (message: string) => {
         console.log("Demo message:", message);
         // Demo function - ne fait rien de spécial
     };

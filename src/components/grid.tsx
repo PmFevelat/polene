@@ -63,7 +63,6 @@ export default function Grid() {
 
         // Détecter si le Grid est complètement centré (sticky scroll terminé)
         const isGridFullyCentered = () => {
-            const containerRect = containerEl.getBoundingClientRect()
             const stickyRect = containerEl.querySelector('.sticky')?.getBoundingClientRect()
             
             // Le Grid est centré quand le sticky container est exactement en haut de la viewport
@@ -131,7 +130,7 @@ export default function Grid() {
                                     ref={cardsRef}
                                     className="overflow-y-auto hide-scrollbar flex flex-col gap-6 h-[28rem] md:h-[32rem] lg:h-[36rem]"
                                 >
-                                    {gridCards.map((card, idx) => (
+                                    {gridCards.map((card) => (
                                         <a
                                             key={card.id}
                                             href="#"

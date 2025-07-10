@@ -13,7 +13,7 @@ import {
   Copy,
   Paintbrush,
   Globe,
-  PencilIcon,
+
   Search,
   Lightbulb,
 } from "lucide-react";
@@ -797,9 +797,6 @@ const ClaudeChatInput: React.FC<ChatInputProps> = ({
                         >
                           <tool.icon className="h-4 w-4" />
                           <span>{tool.name}</span>
-                          {tool.extra && (
-                            <span className="ml-auto text-xs text-gray-500">{tool.extra}</span>
-                          )}
                         </button>
                       ))}
                     </div>
@@ -836,9 +833,6 @@ const ClaudeChatInput: React.FC<ChatInputProps> = ({
                       >
                         <tool.icon className="h-4 w-4" />
                         <span>{tool.name}</span>
-                        {tool.extra && (
-                          <span className="ml-auto text-xs text-gray-500">{tool.extra}</span>
-                        )}
                       </button>
                     ))}
                   </div>
