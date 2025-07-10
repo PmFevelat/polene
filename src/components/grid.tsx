@@ -8,34 +8,27 @@ const gridCards = [
         title: "Introducing Codex",
         category: "Release",
         duration: "12 min read",
-        image: "/image1.png"
+        image: "/image2.png"
     },
     {
         id: 2,
         title: "OpenAI o3 and o4-mini",
         category: "Release", 
         duration: "11 min read",
-        image: "/image2.png"
+        image: "/image3.png"
     },
     {
         id: 3,
         title: "Building a custom math tutor powered by ChatGPT",
         category: "ChatGPT",
         duration: "4 min read",
-        image: "/image3.png"
+        image: "/image4.png"
     },
     {
         id: 4,
         title: "Advanced AI Research",
         category: "Research",
         duration: "8 min read",
-        image: "/image4.png"
-    },
-    {
-        id: 5,
-        title: "Future of AI Technology",
-        category: "Innovation",
-        duration: "6 min read",
         image: "/image5.png"
     }
 ]
@@ -156,14 +149,6 @@ export default function Grid() {
                                                     alt={card.title}
                                                     className="absolute inset-0 h-full w-full object-cover"
                                                 />
-                                                {/* Icon */}
-                                                <div className="absolute top-3 left-3">
-                                                    <div className="w-8 h-8 md:w-10 md:h-10 bg-white rounded-lg flex items-center justify-center shadow-sm">
-                                                        <span className={`font-bold text-sm md:text-lg ${idx === 0 ? 'text-blue-600' : idx === 1 ? 'text-orange-600' : idx === 2 ? 'text-green-600' : idx === 3 ? 'text-purple-600' : 'text-red-600'}`}>
-                                                            {['C', 'O', 'M', 'R', 'E'][idx]}
-                                                        </span>
-                                                    </div>
-                                                </div>
                                             </div>
                                             {/* Card text */}
                                             <div className="mt-2">
